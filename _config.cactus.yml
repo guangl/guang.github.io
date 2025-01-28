@@ -1,0 +1,28 @@
+colorscheme: light
+
+nav:
+  home: /
+  about: /about/
+  tag: /tags/
+  search: /search/
+  projects: https://github.com/guangl/blog
+
+posts_overview:
+  show_all_posts: false
+  post_count: 10
+
+copyright:
+  start_year: 2025
+  end_year:
+
+social_links:
+  -
+    icon: github
+    link: https://github.com/guangl
+  -
+    icon: mail
+    link: mailto:guangluo@outlook.com
+
+# Customize the overview with displaying a tagcloud on the index page.
+# Options: https://hexo.io/docs/helpers.html#tagcloud
+tags_overview: true
