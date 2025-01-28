@@ -1,25 +1,54 @@
-name: Pages
+name: Hexo deploy
 
 on:
   push:
     branches:
-      - main # default branch
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
+
+      - name: Read .tool-versions
+        id: tool-versions
+        run: echo "BUN_VERSION=$(grep '^bun' .tool-versions | awk '{print $2}')" >> $GITHUB_OUTPUT
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          # If your repository depends on submodule, please see: https://github.com/actions/checkout
-          submodules: recursive
-      - name: Use Node.js 20
-        uses: jcbhmr/configure-bun-action@v1
+          bun-version: ${{ steps.tool-versions.outputs.BUN_VERSION }}
+
+      - name: Cache Bun dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lockb') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
+
+      - name: Install Dependencies
+        run: bun install
+
+      - name: Cache Hexo public folder
+        uses: actions/cache@v4
+        with:
+          path: public
+          key: ${{ runner.os }}-hexo-public-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-hexo-public-
+
+      - name: Build
+        run: bun run build
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./public
+          retention-days: 30
+
   deploy:
     needs: build
     permissions:
