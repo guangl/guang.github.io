@@ -95,7 +95,7 @@ logo:
   enabled: true
   width: 50
   height: 50
-  url: /images/logo.png
+  url: images/avator-transparent.jpg
   gravatar: false
   grayout: true
 
